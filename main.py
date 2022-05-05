@@ -13,7 +13,23 @@ def shortest_shortest_path(graph, source):
       (shortest path weight, shortest path number of edges). See test case for example.
     """
     ### TODO
-    pass
+    def dijkstra(visited, frontier):
+      if len(frontier) == 0:
+        return visited
+      else:
+        distance, cnt, node = heappop(frontier)
+        if node in visited:
+          return dijkstra(visited, frontier)
+        else:
+          visited[node] = (distance, cnt)
+          for neighbor, weight in graph[node]:
+            heappush(frontier, (distance + weight, cnt + 1, neighbor))
+          return dijkstra(visited, frontier)
+    
+    frontier = []
+    heappush(frontier, (0, 0, source))
+    visited = dict()
+    return dijkstra(visited, frontier)
     
 def test_shortest_shortest_path():
 
@@ -41,7 +57,21 @@ def bfs_path(graph, source):
       that vertex in the shortest path tree.
     """
     ###TODO
-    pass
+    queue = []
+    visited = {}
+    for u in graph.keys():
+      visited[u] = False
+    visited[source] = True
+    res = {}
+    queue.append(source)
+    while queue:
+      u = queue.pop(0)
+      for v in graph[u]:
+        if visited[v] == False:
+          queue.append(v)
+          visited[v] = True
+          res[v] = u
+    return res
 
 def get_sample_graph():
      return {'s': {'a', 'b'},
@@ -66,7 +96,11 @@ def get_path(parents, destination):
       (excluding the destination node itself). See test_get_path for an example.
     """
     ###TODO
-    pass
+    res = ''
+    while destination in parents:
+      res += parents[destination]
+      destination = parents[destination]
+    return res[::-1]
 
 def test_get_path():
     graph = get_sample_graph()
